@@ -66,6 +66,26 @@ namespace cereal
     return {name, std::forward<T>(value)};
   }
 
+  //! Creates a name value pair. Accepts an empty tag type as first argument in order to allow for argument-dependent lookup (ADL).
+  /*! @relates NameValuePair
+      @relates AdlTag
+      @ingroup Utility */
+  template <class T> inline
+  NameValuePair<T> make_nvp( AdlTag, std::string const & name, T && value )
+  {
+    return {name.c_str(), std::forward<T>(value)};
+  }
+
+  //! Creates a name value pair. Accepts an empty tag type as first argument in order to allow for argument-dependent lookup (ADL).
+  /*! @relates NameValuePair
+      @relates AdlTag
+      @ingroup Utility */
+  template <class T> inline
+  NameValuePair<T> make_nvp( AdlTag, const char * name, T && value )
+  {
+    return {name, std::forward<T>(value)};
+  }
+
   //! Creates a name value pair for the variable T with the same name as the variable
   /*! @relates NameValuePair
       @ingroup Utility */
@@ -259,6 +279,10 @@ namespace cereal
       { }
 
       OutputArchive & operator=( OutputArchive const & ) = delete;
+
+      //! Provide an empty tag for argument-dependent lookup (ADL) in ::cereal
+      /*! @relates AdlTag */
+      static AdlTag cereal_adl() { return AdlTag{}; }
 
       //! Serializes all passed in data
       /*! This is the primary interface for serializing data with an archive */
@@ -645,6 +669,10 @@ namespace cereal
       { }
 
       InputArchive & operator=( InputArchive const & ) = delete;
+
+      //! Provide an empty tag for argument-dependent lookup (ADL) in ::cereal
+      /*! @relates AdlTag */
+      static AdlTag cereal_adl() { return AdlTag{}; }
 
       //! Serializes all passed in data
       /*! This is the primary interface for serializing data with an archive */
